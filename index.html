@@ -90,6 +90,15 @@ const details = document.getElementById("detailList");
 const pad = n => String(n).padStart(2, "0");
 const key = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
 
+const holidays = [
+  "2026-09-21",
+  "2026-09-22",
+  "2026-09-23",
+  "2026-10-12",
+  "2026-11-03",
+  "2026-11-23",
+];
+
 const esc = s => String(s)
   .replaceAll("&", "&amp;")
   .replaceAll("<", "&lt;")
@@ -137,8 +146,8 @@ function render() {
     const k = key(y, m, d);
     const td = document.createElement("td");
 
-    if (wd === 0) td.classList.add("sun");
-    if (wd === 6) td.classList.add("sat");
+　　if (wd === 0 || holidays.includes(k)) td.classList.add("sun");
+　　if (wd === 6) td.classList.add("sat");
     if (k === tk) td.classList.add("today");
 
     td.innerHTML = `<div class="date">${d}</div><div class="events"></div>`;
