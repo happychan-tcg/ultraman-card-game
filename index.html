@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ウルトラマンカードゲームの大会予定をカレンダー形式で確認できるサイト">
+<title>ウルトラマンカードゲーム 大会予定</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="site">
+  <h1>9月大会予定店舗</h1>
+
+  <div class="toolbar">
+    <div class="store-filter">
+      <label for="storeFilter">開催店舗：</label>
+      <select id="storeFilter">
+        <option value="all">すべての店舗</option>
+        <option value="TCバトロコ秋田駅前">TCバトロコ秋田駅前</option>
+        <option value="港北いわや">港北いわや</option>
+        <option value="カードショップアビス">カードショップアビス</option>
+        <option value="お宝弁財天 feat.パンドラ">お宝弁財天 feat.パンドラ</option>
+      </select>
+    </div>
+
+    <div class="month-nav">
+      <button id="prevMonth">＜ 前月</button>
+      <div id="monthTitle" class="month-title"></div>
+      <button id="nextMonth">翌月 ＞</button>
+    </div>
+  </div>
+
+  <table class="calendar" aria-label="ウルトラマンカードゲーム大会カレンダー">
+    <thead>
+      <tr>
+        <th class="sun">日</th><th>月</th><th>火</th><th>水</th>
+        <th>木</th><th>金</th><th class="sat">土</th>
+      </tr>
+    </thead>
+    <tbody id="calendarBody"></tbody>
+  </table>
+
+  <div class="legend">
+    ※ 日付をクリックすると、その日の大会詳細（時刻・店舗・参加費・定員など）を確認できます。
+  </div>
+</div>
+
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="close" id="closeModal" aria-label="閉じる">×</button>
+    </div>
+    <div id="detailList" class="detail-list"></div>
+  </div>
+</div>
+
+<!-- 大会データ -->
+<script src="events.js"></script>
+
+<script>
+let currentDate=new Date(2026,8,1);const body=document.getElementById("calendarBody"),title=document.getElementById("monthTitle"),filter=document.getElementById("storeFilter"),backdrop=document.getElementById("modalBackdrop"),modalTitle=document.getElementById("modalTitle"),details=document.getElementById("detailList");const pad=n=>String(n).padStart(2,"0"),key=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,esc=s=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+function filtered(k){return events.filter(e=>e.date===k&&(filter.value==="all"||e.store===filter.value)).sort((a,b)=>a.time.localeCompare(b.time))}
+function render(){const y=currentDate.getFullYear(),m=currentDate.getMonth();title.textContent=`${y}年${m+1}月`;document.querySelector("h1").textContent=`${m+1}月大会予定店舗`;body.innerHTML="";const first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();const t=new Date(),tk=key(t.getFullYear(),t.getMonth(),t.getDate());let row=document.createElement("tr"),count=0;for(let i=0;i<first;i++){let td=document.createElement("td");td.className="empty";row.appendChild(td);count++}for(let d=1;d<=last;d++){const wd=new Date(y,m,d).getDay(),k=key(y,m,d),td=document.createElement("td");if(wd===0)td.classList.add("sun");if(wd===6)td.classList.add("sat");if(k===tk)td.classList.add("today");td.innerHTML=`<div class="date">${d}</div><div class="events"></div>`;const area=td.querySelector(".events"),list=filtered(k);list.slice(0,3).forEach(e=>{let div=document.createElement("div");div.className="event";div.innerHTML=`<span class="event-time">${esc(e.time)}</span><span class="event-title">${esc(e.title)}</span><span class="event-store">${esc(e.store)}</span>`;area.appendChild(div)});if(list.length>3){let more=document.createElement("div");more.className="more";more.textContent=`ほか ${list.length-3}件`;area.appendChild(more)}td.appendChild(area);td.onclick=()=>open(k);row.appendChild(td);count++;if(count%7===0){body.appendChild(row);row=document.createElement("tr")}}while(count%7!==0){let td=document.createElement("td");td.className="empty";row.appendChild(td);count++}if(row.children.length)body.appendChild(row)}
+function open(k){const [y,m,d]=k.split("-").map(Number),w=["日","月","火","水","木","金","土"],list=filtered(k);modalTitle.textContent=`${y}年${m}月${d}日（${w[new Date(y,m-1,d).getDay()]}）の大会`;details.innerHTML="";if(!list.length)details.innerHTML='<div class="no-events">この日の大会はありません。</div>';else list.forEach(e=>{let c=document.createElement("div");c.className="detail-card";c.innerHTML=`<h3>${esc(e.title)}</h3><div class="detail-row"><div class="detail-label">開始時刻</div><div>${esc(e.time)}</div></div><div class="detail-row"><div class="detail-label">ゲーム</div><div>ウルトラマンカードゲーム</div></div><div class="detail-row"><div class="detail-label">店舗</div><div>${esc(e.store)}</div></div><div class="detail-row"><div class="detail-label">参加費</div><div>${esc(e.fee)}</div></div><div class="detail-row"><div class="detail-label">定員</div><div>${esc(e.capacity)}</div></div>${e.note?`<div class="detail-row"><div class="detail-label">備考</div><div>${esc(e.note)}</div></div>`:""}`;details.appendChild(c)});backdrop.classList.add("open")}
+function close(){backdrop.classList.remove("open")}document.getElementById("prevMonth").onclick=()=>{currentDate.setMonth(currentDate.getMonth()-1);render()};document.getElementById("nextMonth").onclick=()=>{currentDate.setMonth(currentDate.getMonth()+1);render()};filter.onchange=render;document.getElementById("closeModal").onclick=close;backdrop.onclick=e=>{if(e.target===backdrop)close()};document.onkeydown=e=>{if(e.key==="Escape")close()};render();
+
+</script>
+</body>
+</html>
