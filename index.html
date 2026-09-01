@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="秋田県で開催されるウルトラマンカードゲームの大会予定をカレンダー形式で確認できるサイト">
-<title>秋田県 ウルトラマンカードゲーム 大会予定</title>
+<title>秋田県 ウルトラマンカードゲーム 大会情報</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 <div class="site">
-  <h1>秋田県 ウルトラマンカードゲーム_9月大会予定</h1>
+  <h1>秋田県 ウルトラマンカードゲーム_9月大会情報</h1>
 
   <div class="toolbar">
     <div class="filters">
@@ -121,7 +121,7 @@ function render() {
   const m = currentDate.getMonth();
 
   title.textContent = `${y}年${m + 1}月`;
-  document.querySelector("h1").textContent = `秋田県 ウルトラマンカードゲーム_${m + 1}月大会予定`;
+  document.querySelector("h1").textContent = `秋田県 ウルトラマンカードゲーム_${m + 1}月大会情報`;
 
   body.innerHTML = "";
 
