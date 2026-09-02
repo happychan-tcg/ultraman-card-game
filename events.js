@@ -29,4 +29,5 @@ const events = [
 {date:"2026-09-27",time:"13:00",title:"ギャラクシーカップ",store:"カードショップアビス",fee:"500円",capacity:"16名",note:""},
 {date:"2026-09-27",time:"14:00",title:"チャレンジマッチ",store:"お宝弁財天 feat.パンドラ",fee:"蘭連商品500円以上購入",capacity:"8名",note:""},
 {date:"2026-09-28",time:"15:00",title:"ギャラクシーカップ",store:"TCバトロコ秋田駅前",fee:"100円",capacity:"16名",note:""},
+{date:"2026-10-25",time:"13:30",title:"交流会（非公認）※申請済み・許可待ち",store:"TCバトロコ秋田駅前",fee:"未定",capacity:"32名",note:"はっぴぃ主催"},
 ];
