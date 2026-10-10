@@ -149,8 +149,8 @@ function render() {
     const k = key(y, m, d);
     const td = document.createElement("td");
 
-　　if (wd === 0 || holidays.includes(k)) td.classList.add("sun");
-　　if (wd === 6) td.classList.add("sat");
+    if (wd === 0 || holidays.includes(k)) td.classList.add("sun");
+    if (wd === 6) td.classList.add("sat");
     if (k === tk) td.classList.add("today");
 
     td.innerHTML = `<div class="date">${d}</div><div class="events"></div>`;
